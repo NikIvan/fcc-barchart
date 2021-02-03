@@ -1,0 +1,27 @@
+{
+  "name": "fcc-barchart",
+  "version": "1.0.0",
+  "description": "Barchart with D3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/server/index.js",
+    "start:watch": "nodemon --watch ./src/server ./src/server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikIvan/fcc-barchart.git"
+  },
+  "keywords": [
+    "D3"
+  ],
+  "author": "NikIvan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NikIvan/fcc-barchart/issues"
+  },
+  "homepage": "https://github.com/NikIvan/fcc-barchart#readme",
+  "dependencies": {
+    "d3": "^6.5.0"
+  }
+}
