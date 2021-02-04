@@ -30,32 +30,6 @@
       <div id="chart"></div>
     </div>
   </div>
-
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      app();
-    });
-
-    const width = 500;
-    const height = 500;
-    const dataUrl = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json';
-
-    async function app() {
-      d3.select('chart');
-      let data;
-
-      try {
-        const response = await fetch(dataUrl, {
-          mode: 'cors',
-        });
-        data = await response.json();
-      } catch (e) {
-        console.error(e);
-      }
-
-      console.log(data);
-    }
-  </script>
+  <script src="index.js"></script>
 </body>
 </html>

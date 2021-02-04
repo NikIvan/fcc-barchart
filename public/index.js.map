@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/client/index.js"],
+  "sourcesContent": ["document.addEventListener('DOMContentLoaded', () => {\n  app().catch(err => console.error(err));\n});\n\nconst width = 507;\nconst height = 500;\nconst dataUrl = '/api/v1/data';\n\n// 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json';\n\nasync function app() {\n  let data;\n\n  try {\n    const response = await fetch(dataUrl);\n    data = await response.json();\n  } catch (e) {\n    console.error(e);\n  }\n\n  console.log(data);\n}\n"],
+  "mappings": ";;AAAA,WAAS,iBAAiB,oBAAoB;AAC5C,UAAM,MAAM,SAAO,QAAQ,MAAM;AAAA;AAKnC,MAAM,UAAU;AAIhB;AACE,QAAI;AAEJ;AACE,YAAM,WAAW,MAAM,MAAM;AAC7B,aAAO,MAAM,SAAS;AAAA,aACf;AACP,cAAQ,MAAM;AAAA;AAGhB,YAAQ,IAAI;AAAA;",
+  "names": []
+}

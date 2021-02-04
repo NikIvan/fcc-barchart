@@ -10,11 +10,22 @@ async function readFile(pathToFile) {
   let stats = null;
   let mimetype = '';
 
+  if (pathToFile.endsWith('.html')) {
+    mimetype = 'text/html';
+  } else if (pathToFile.endsWith('.js')) {
+    mimetype = 'text/javascript';
+  } else if (pathToFile.endsWith('.css')) {
+    mimetype = 'text/css';
+  } else {
+    getMimetypeResult = await execFile('file', ['-b','--mime-type', pathToFile]);
+
+    if (getMimetypeResult) {
+      mimetype = getMimetypeResult.stdout.replace(/\n/, '');
+    }
+  }
+
   try {
-    [getMimetypeResult, stats] = await Promise.all([
-      execFile('file', ['-b','--mime-type', pathToFile]),
-      fs.promises.stat(pathToFile),
-    ]);
+    stats = await fs.promises.stat(pathToFile);
   } catch (err) {
     console.dir({err});
     if (err.code === 'ENOENT') {
@@ -28,10 +39,6 @@ async function readFile(pathToFile) {
     return null;
   }
 
-  if (getMimetypeResult) {
-    mimetype = getMimetypeResult.stdout.replace(/\n/, '');
-  }
-
   return {
     readStream: fs.createReadStream(pathToFile),
     stats,
@@ -40,9 +47,19 @@ async function readFile(pathToFile) {
 }
 
 async function findStaticFile(input) {
-  // TODO: sanitize input
-  let pathToFile = path.join(config.publicFolder, input);
-  let stats = await fs.promises.stat(pathToFile);
+  const safeSuffix = path.normalize(input).replace(/^(\.\.(\/|\\|$))+/, '');
+  let pathToFile = path.join(config.publicFolder, safeSuffix);
+  let stats = null;
+
+  try {
+    stats = await fs.promises.stat(pathToFile);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.log(`File ${pathToFile} not found`);
+    } else {
+      throw err;
+    }
+  }
 
   if (stats && stats.isFile()) {
     return {
@@ -52,24 +69,7 @@ async function findStaticFile(input) {
   }
 }
 
-async function sendFile(req, res, pathToFile) {
-  try {
-    const {readStream, stats, mimetype} = await readFile(pathToFile);
-    console.dir({stats, mimetype});
-
-    res.writeHead(200, {
-      'Content-Type': mimetype,
-      'Content-Length': stats.size,
-    });
-
-    readStream.pipe(res);
-  } catch (err) {
-    console.error(`Error while trying to send file ${pathToFile}: ${err}`);
-  }
-}
-
 module.exports = {
   readFile,
   findStaticFile,
-  sendFile,
 }

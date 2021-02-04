@@ -1,5 +1,4 @@
 
-
 class HttpRouter {
   static METHOD_GET = 'GET'
   static METHOD_POST = 'POST'
@@ -62,7 +61,6 @@ class HttpRouter {
     if (matchedRoutes.exact.has(path)) {
       matchedHandler = matchedRoutes.exact.get(path);
     } else {
-      console.log('Checking regex routes...');
       for (const [route, handler] of matchedRoutes.regex) {
         if ((new RegExp(route)).test(path)) {
           matchedHandler = handler;

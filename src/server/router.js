@@ -1,14 +1,32 @@
 const path = require('path');
 
 const HttpRouter = require('./lib/HttpRouter');
-const fileSystem = require('./lib/fileSystem');
+const {sendFile, sendJSON} = require('./lib/responseHelpers');
 const config = require('./config/config');
+const API_PREFIX = '/api/v1';
 
 const router = new HttpRouter();
 
-router.set('/', { method: HttpRouter.METHOD_GET, isExact: true}, async (req, res) => {
+router.set(
+  '/', {
+    method: HttpRouter.METHOD_GET,
+    isExact: true
+  }, async (req, res) => {
   const pathToFile = path.join(config.publicFolder, '/index.html');
-  await fileSystem.sendFile(req, res, pathToFile);
+  await sendFile(req, res, pathToFile);
+});
+
+router.set(
+  `${API_PREFIX}/data`,
+  {
+    method: HttpRouter.METHOD_GET,
+    isExact: true
+  },
+  async (req, res) => {
+  const data = [{key: 'value'}];
+  const body = JSON.stringify(data);
+
+  sendJSON(res, body);
 });
 
 module.exports = router;

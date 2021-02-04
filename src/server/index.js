@@ -1,7 +1,8 @@
 const http = require('http');
 
 const router = require('./router');
-const {findStaticFile, sendFile} = require('./lib/fileSystem');
+const {findStaticFile} = require('./lib/fileSystem');
+const {sendFile} = require('./lib/responseHelpers');
 const {PORT, HOSTNAME} = require('./constants');
 
 const server = http.createServer(async (req, res) => {
