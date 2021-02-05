@@ -1,7 +1,8 @@
 const path = require('path');
+const https = require('https');
 
 const HttpRouter = require('./lib/HttpRouter');
-const {sendFile, sendJSON} = require('./lib/responseHelpers');
+const {sendFile, sendJSON, sendError} = require('./lib/responseHelpers');
 const config = require('./config/config');
 const API_PREFIX = '/api/v1';
 
@@ -20,13 +21,22 @@ router.set(
   `${API_PREFIX}/data`,
   {
     method: HttpRouter.METHOD_GET,
-    isExact: true
+    isExact: true,
   },
   async (req, res) => {
-  const data = [{key: 'value'}];
-  const body = JSON.stringify(data);
+    const dataUrl = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json';
+    const apiRequest = https.request(dataUrl, (apiResponse) => {
+      console.dir(`statusCode: ${apiResponse.statusCode}`);
 
-  sendJSON(res, body);
-});
+      apiResponse.pipe(res);
+    });
+
+    apiRequest.on('error', (err) => {
+      console.error(err);
+      sendError(500);
+    });
+
+    apiRequest.end();
+  });
 
 module.exports = router;
